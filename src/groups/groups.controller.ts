@@ -1,34 +1,38 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards } from '@nestjs/common';
 import { GroupsService } from './groups.service';
 import { CreateGroupDto } from './dto/create-group.dto';
-import { UpdateGroupDto } from './dto/update-group.dto';
+import { AddUsersDto } from './dto/add-users.dto';
+import { OwnerGuard } from './guards/owner.guard';
 
-@Controller('groups')
+
+@Controller('api/friends/groups/')
 export class GroupsController {
-  constructor(private readonly groupsService: GroupsService) {}
+  constructor(
+    private readonly groupsService: GroupsService
+  ){}
 
   @Post()
-  create(@Body() createGroupDto: CreateGroupDto) {
-    return this.groupsService.create(createGroupDto);
+  create(@Req() req, @Body() createGroupDto: CreateGroupDto) {
+    return this.groupsService.create(req.user.id, createGroupDto);
   }
 
-  @Get()
-  findAll() {
-    return this.groupsService.findAll();
+  @Post(':groupId/users')
+  @UseGuards(OwnerGuard)
+  addUsers(
+    @Param('groupId') groupId: number,
+    @Body('userIds') addUsersDto: AddUsersDto
+  ){
+    return this.groupsService.addUsers(groupId, addUsersDto.userIds);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.groupsService.findOne(+id);
+  @Get(':groupId/assignments')
+  @UseGuards(OwnerGuard)
+  async getMyAssignments(@Param('groupId') groupId: string){
+    return this.groupsService.getAllAssignments(groupId);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGroupDto: UpdateGroupDto) {
-    return this.groupsService.update(+id, updateGroupDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.groupsService.remove(+id);
+  @Get(':groupId/my-assignment')
+  async getMyAssignment(@Param('groupId') groupId: string, @Req() req){
+    return this.groupsService.getMyAssignment(groupId, req.user.id);
   }
 }
