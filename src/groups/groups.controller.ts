@@ -16,15 +16,7 @@ export class GroupsController {
     return this.groupsService.create(req.user.id, createGroupDto);
   }
 
-  @Post(':groupId/users')
-  @UseGuards(OwnerGuard)
-  addUsers(
-    @Param('groupId') groupId: number,
-    @Body('userIds') addUsersDto: AddUsersDto
-  ){
-    return this.groupsService.addUsers(groupId, addUsersDto.userIds);
-  }
-
+  
   @Get(':groupId/assignments')
   @UseGuards(OwnerGuard)
   async getMyAssignments(@Param('groupId') groupId: string){

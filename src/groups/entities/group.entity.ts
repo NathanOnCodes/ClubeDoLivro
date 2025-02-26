@@ -12,9 +12,8 @@ export class Group {
     @ManyToOne(() => User, (user) => user.ownedGroups)
     owner: User;
 
-    @ManyToMany(() => User, (user) => user.participatingGroups)
-    @JoinTable() 
-    participants: User[];
+    @Column('simple-json', { default: '[]' })
+    participants: Array<{ name: string; email: string; }>;
 
     @Column({ default: 'pending' })
     status: 'pending' | 'drawn';

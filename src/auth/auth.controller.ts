@@ -7,10 +7,10 @@ import { AuthGuard } from './auth.guard';
 export class AuthController {
     constructor(private authService: AuthService) {}
 
-    @Public()
-    @HttpCode(HttpStatus.OK)
-    @Post('login')
-    async signIn(@Body() auth: AuthDto){
-        return await this.authService.signIn(auth.email);
-    }
+    // @Public()
+    // @HttpCode(HttpStatus.OK)
+    // @Post('login')
+    // async signIn(@Body() auth: AuthDto){
+    //     return await this.authService.signIn(auth.email);
+    // }
 }

@@ -18,25 +18,23 @@ export class GroupsService {
 
   async create(userId: number, CreateGroupDto: CreateGroupDto): Promise<Group> {
     const owner = await this.userRepository.findOne({where: {id: userId}});
-    const group = this.groupRepository.create({
-      ...CreateGroupDto,
-      owner,
-      participants: [owner],
-    });
-    return this.groupRepository.save(group);
+  
+  const group = this.groupRepository.create({
+    name: CreateGroupDto.name,
+    owner,
+    participants: CreateGroupDto.participants || [],
+  });
+  
+  return this.groupRepository.save(group);
   }
 
-  async addUsers(groupId: number, userIds: number[]): Promise<Group>{
-    const group = await this.groupRepository.findOne({
-      where: {id: groupId},
-      relations: ['participants'],
-    });
-    const users = await this.userRepository.find({
-      where: {id: In(userIds)},
-    });
-    group.participants.push(...users);
+  async addParticipant(groupId: number, newParticipant: {name: string, email: string}){
+    const group = await this.getGroupById(groupId);
+    if(!group) throw new NotFoundException('Grupo não encontrado');
+    group.participants.push(newParticipant);
     return this.groupRepository.save(group);
   }
+  
   async getGroupById(groupId: number): Promise<Group> {
     const group = await this.groupRepository.findOne({
       where: { id: groupId },

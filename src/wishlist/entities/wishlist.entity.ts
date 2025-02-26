@@ -1,1 +1,3 @@
-export class Wishlist {}
+export class Wishlist {
+    user: any;
+}
