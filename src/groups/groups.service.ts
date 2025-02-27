@@ -28,6 +28,13 @@ export class GroupsService {
   return this.groupRepository.save(group);
   }
 
+  async findOne(email: string) {
+    return await this.userRepository.findOne({
+      where: { email },
+      relations: ['wishlist']
+    });
+  }
+
   async addParticipant(groupId: number, newParticipant: {name: string, email: string}){
     const group = await this.getGroupById(groupId);
     if(!group) throw new NotFoundException('Grupo não encontrado');

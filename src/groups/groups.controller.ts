@@ -15,8 +15,7 @@ export class GroupsController {
   create(@Req() req, @Body() createGroupDto: CreateGroupDto) {
     return this.groupsService.create(req.user.id, createGroupDto);
   }
-
-  
+    
   @Get(':groupId/assignments')
   @UseGuards(OwnerGuard)
   async getMyAssignments(@Param('groupId') groupId: string){
