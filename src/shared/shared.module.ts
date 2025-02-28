@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
-import { RedisService } from './redis/redis.service';
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-store';
-import { RabbitmqService } from './rabbitmq/rabbitmq.service';
 
 @Module({
   imports: [
@@ -14,7 +12,7 @@ import { RabbitmqService } from './rabbitmq/rabbitmq.service';
         ttl: 600, // TTL padrão em segundos (opcional)
       }),
   ],
-  providers: [RabbitmqService, RedisService],
-  exports: [RedisService]
+  providers: [],
+  exports: []
 })
 export class SharedModule {}
